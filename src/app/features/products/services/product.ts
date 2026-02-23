@@ -2,14 +2,16 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { ProductsApiResponse } from '../../../core/models/products.model';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
+import { ApiService } from '../../../core/services/api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
   private http = inject(HttpClient);
+  private apiService = inject(ApiService);
 
-  private productsUrl = 'https://dummyjson.com/products';
+  private productsUrl = `${this.apiService.baseUrl}/products`;
 
   // Pagination state
   private skipSignal = signal(0);
@@ -18,37 +20,38 @@ export class ProductService {
   // Internal subject for reactive HTTP
   private productsSubject = new BehaviorSubject<ProductsApiResponse>({
     products: [],
-    total: 0,
-    skip: 0,
-    limit: this.limit,
   });
 
   productsResponse = signal(this.productsSubject.value);
 
-  products = computed(() => this.productsResponse().products);
+  // products = computed(() => this.productsResponse().products);
+
+  // Computed list of products for the current page
+  products = computed(() => {
+    const allProducts = this.productsResponse().products;
+    const skip = this.skipSignal();
+    return allProducts.slice(skip, skip + this.limit);
+  });
 
   constructor() {
-    // Whenever skip changes, fetch new page
     effect(() => {
-      const skip = this.skipSignal();
+      // Only need to fetch once, or you can fetch fresh if your API supports pagination
       this.http
-        .get<ProductsApiResponse>(
-          `${this.productsUrl}?limit=${this.limit}&skip=${skip}`,
-        )
+        .get<ProductsApiResponse>(this.productsUrl)
         .pipe(
           tap((res) => {
             this.productsSubject.next(res);
             this.productsResponse.set(res);
+            // console.log('products res: ', this.productsResponse());
           }),
         )
         .subscribe();
     });
   }
 
-  // Navigation helpers
   nextPage() {
     const nextSkip = this.skipSignal() + this.limit;
-    if (nextSkip < this.productsResponse().total) {
+    if (nextSkip < this.productsResponse().products.length) {
       this.skipSignal.set(nextSkip);
     }
   }
@@ -61,14 +64,14 @@ export class ProductService {
   }
 
   goToPage(pageIndex: number) {
-    const skip = pageIndex * this.limit;
-    if (skip >= 0 && skip < this.productsResponse().total) {
-      this.skipSignal.set(skip);
+    const newSkip = pageIndex * this.limit;
+    if (newSkip >= 0 && newSkip < this.productsResponse().products.length) {
+      this.skipSignal.set(newSkip);
     }
   }
 
   get totalPages() {
-    return Math.ceil(this.productsResponse().total / this.limit);
+    return Math.ceil(this.productsResponse().products.length / this.limit);
   }
 
   get currentPageIndex() {

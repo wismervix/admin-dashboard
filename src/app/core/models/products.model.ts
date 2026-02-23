@@ -1,8 +1,5 @@
 export interface ProductsApiResponse {
   products: Product[];
-  total: number;
-  skip: number;
-  limit: number;
 }
 
 export interface Product {

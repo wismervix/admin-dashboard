@@ -9,13 +9,6 @@ export const USER_ROUTES: Routes = [
       ),
   },
   {
-    path: 'new',
-    loadComponent: () =>
-      import('./pages/user-form-page/user-form-page').then(
-        (m) => m.UserFormPage,
-      ),
-  },
-  {
     path: ':id/edit',
     loadComponent: () =>
       import('./pages/user-form-page/user-form-page').then(

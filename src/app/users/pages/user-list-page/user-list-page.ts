@@ -1,9 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
 import { UserService } from '../../services/user';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-list-page',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './user-list-page.html',
   styleUrl: './user-list-page.scss',
 })
