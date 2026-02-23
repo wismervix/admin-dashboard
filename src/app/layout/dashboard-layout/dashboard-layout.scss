@@ -1,0 +1,19 @@
+.layout {
+  display: flex;
+  height: 100vh;
+  margin-left: 80px;
+  background-color: #f4f6f9;
+  font-family: "Inter", sans-serif;
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+}

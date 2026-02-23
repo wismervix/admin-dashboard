@@ -1,0 +1,93 @@
+<aside class="sidebar" [class.sidebar--collapsed]="isCollapsed">
+  <!-- LOGO / TOGGLE -->
+  <div class="sidebar__logo">
+    <a routerLink="/products">
+      <i class="fa-solid fa-gauge"></i>
+      @if (!isCollapsed) {
+        <span>MyDashboard</span>
+      }
+    </a>
+
+    <button
+      class="sidebar__toggle"
+      (click)="isCollapsed = !isCollapsed"
+      aria-label="Toggle sidebar"
+    >
+      <i
+        class="fa-solid"
+        [class.fa-chevron-left]="!isCollapsed"
+        [class.fa-chevron-right]="isCollapsed"
+      ></i>
+    </button>
+  </div>
+
+  <nav class="sidebar__nav" aria-label="Main navigation">
+    <!-- PRODUCTS -->
+    <section class="sidebar__section">
+      <button
+        class="sidebar__section-title"
+        (click)="toggleSection('products')"
+      >
+        <i class="fa-solid fa-box" (click)="isCollapsed = !isCollapsed"></i>
+        @if (!isCollapsed) {
+          <span>Products</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        }
+      </button>
+
+      @if (openSection === "products" && !isCollapsed) {
+        <ul class="sidebar__list">
+          <li>
+            <a routerLink="/products" routerLinkActive="active-link">
+              <i class="fa-solid fa-list"></i>
+              Product List
+            </a>
+          </li>
+          <li>
+            <a routerLink="/products/new" routerLinkActive="active-link">
+              <i class="fa-solid fa-plus"></i>
+              New Product
+            </a>
+          </li>
+        </ul>
+      }
+    </section>
+
+    <!-- USERS -->
+    <section class="sidebar__section">
+      <button class="sidebar__section-title" (click)="toggleSection('users')">
+        <i class="fa-solid fa-users" (click)="isCollapsed = !isCollapsed"></i>
+        @if (!isCollapsed) {
+          <span>Users</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        }
+      </button>
+
+      @if (openSection === "users" && !isCollapsed) {
+        <ul class="sidebar__list">
+          <li>
+            <a routerLink="/users" routerLinkActive="active-link">
+              <i class="fa-solid fa-user"></i>
+              User List
+            </a>
+          </li>
+          <li>
+            <a routerLink="/users/new" routerLinkActive="active-link">
+              <i class="fa-solid fa-user-plus"></i>
+              New User
+            </a>
+          </li>
+        </ul>
+      }
+    </section>
+  </nav>
+
+  <footer class="sidebar__footer">
+    <button class="btn btn-danger w-100">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      @if (!isCollapsed) {
+        <span>Logout</span>
+      }
+    </button>
+  </footer>
+</aside>

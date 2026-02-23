@@ -1,0 +1,41 @@
+// ========================
+// 🔁🧩 MIXINS (reusable style blocks)
+// ========================
+@use "./variables" as *;
+
+@mixin dynamic-text(
+  $weight: 600,
+  $size: 17px,
+  $color: #000,
+  $family: var(--font-apple),
+  $line-height: inherit
+) {
+  line-height: $line-height;
+  font-family: $family;
+  font-weight: $weight;
+  font-size: $size;
+  color: $color;
+}
+
+@mixin spread($gap: 0, $align-position: center, $direction: row, $wrap: wrap) {
+  gap: $gap;
+  display: flex;
+  flex-wrap: $wrap;
+  flex-direction: $direction;
+  align-items: $align-position;
+  justify-content: space-between;
+}
+
+@mixin centered(
+  $gap: 0,
+  $align-position: center,
+  $wrap: nowrap,
+  $direction: row
+) {
+  gap: $gap;
+  display: flex;
+  flex-wrap: $wrap;
+  justify-content: center;
+  flex-direction: $direction;
+  align-items: $align-position;
+}
