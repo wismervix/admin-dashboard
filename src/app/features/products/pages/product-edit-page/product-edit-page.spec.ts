@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductFormPage } from './product-form-page';
+import { ProductFormPage } from './product-edit-page';
 
 describe('ProductFormPage', () => {
   let component: ProductFormPage;
@@ -8,9 +8,8 @@ describe('ProductFormPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductFormPage]
-    })
-    .compileComponents();
+      imports: [ProductFormPage],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ProductFormPage);
     component = fixture.componentInstance;

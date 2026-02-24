@@ -12,7 +12,7 @@ export interface User {
   username: string;
   birthDate: string; // "YYYY-MM-DD" format
   image: string;
-  role: string;
+  role: 'admin' | 'user' | 'moderator' | string;
   address: string;
   city: string;
   state: string;

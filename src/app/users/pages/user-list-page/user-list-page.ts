@@ -11,9 +11,9 @@ import { RouterModule } from '@angular/router';
 export class UserListPage {
   public userService = inject(UserService);
 
-  users = computed(() => this.userService.users());
-  currentPage = computed(() => this.userService.currentPageIndex);
-  totalPages = computed(() => this.userService.totalPages);
+  users = this.userService.users;
+  currentPage = this.userService.currentPageIndex;
+  totalPages = this.userService.totalPages;
 
   nextPage() {
     this.userService.nextPage();
@@ -30,4 +30,16 @@ export class UserListPage {
   pageNumbers = computed(() =>
     Array.from({ length: this.totalPages() }, (_, i) => i),
   );
+
+  deleteUser(id: number) {
+    const confirmed = confirm('Are you sure you want to delete this user?');
+
+    if (!confirmed) return;
+
+    this.userService.deleteUser(id).subscribe({
+      error: (err) => {
+        console.error('Delete failed', err);
+      },
+    });
+  }
 }

@@ -1,8 +1,8 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { UsersApiResponse } from '../../core/models/user.model';
+import { User, UsersApiResponse } from '../../core/models/user.model';
 import { ApiService } from '../../core/services/api.service';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,38 +17,64 @@ export class UserService {
   private skipSignal = signal(0);
   private limit = 30;
 
-  // Internal subject for reactive HTTP
-  private usersSubject = new BehaviorSubject<UsersApiResponse>({
-    users: [],
-  });
-
-  usersResponse = signal(this.usersSubject.value);
+  public usersResponse = signal<UsersApiResponse>({ users: [] });
 
   // users = computed(() => this.usersResponse().users);
 
   // Computed list of users for the current page
-  users = computed(() => {
+  readonly users = computed(() => {
     const allUsers = this.usersResponse().users;
     const skip = this.skipSignal();
     return allUsers.slice(skip, skip + this.limit);
   });
 
+  readonly totalPages = computed(() =>
+    Math.ceil(this.usersResponse().users.length / this.limit),
+  );
+
+  readonly currentPageIndex = computed(() =>
+    Math.floor(this.skipSignal() / this.limit),
+  );
+
   constructor() {
-    effect(() => {
-      // Only need to fetch once, or you can fetch fresh if your API supports pagination
-      this.http
-        .get<UsersApiResponse>(this.usersUrl)
-        .pipe(
-          tap((res) => {
-            this.usersSubject.next(res);
-            this.usersResponse.set(res);
-            console.log('user res: ', this.usersResponse());
-          }),
-        )
-        .subscribe();
-    });
+    this.http
+      .get<UsersApiResponse>(this.usersUrl)
+      .pipe(tap((res) => this.usersResponse.set(res)))
+      .subscribe();
   }
 
+  // 🔍 Get single user
+  getUserById(id: number): User | undefined {
+    return this.usersResponse().users.find((u) => u.id === id);
+  }
+
+  // ✏ Update user
+  updateUser(updatedUser: User) {
+    return this.http
+      .put<{ user: User }>(`${this.usersUrl}/${updatedUser.id}`, updatedUser)
+      .pipe(
+        tap((res) => {
+          const updatedUsers = this.usersResponse().users.map((u) =>
+            u.id === updatedUser.id ? res.user : u,
+          );
+
+          this.usersResponse.set({ users: updatedUsers });
+        }),
+      );
+  }
+
+  // 🗑️ Delete user
+  deleteUser(id: number) {
+    return this.http.delete(`${this.usersUrl}/${id}`).pipe(
+      tap(() => {
+        const filteredUsers = this.usersResponse().users.filter(
+          (u) => u.id !== id,
+        );
+
+        this.usersResponse.set({ users: filteredUsers });
+      }),
+    );
+  }
   nextPage() {
     const nextSkip = this.skipSignal() + this.limit;
     if (nextSkip < this.usersResponse().users.length) {
@@ -68,13 +94,5 @@ export class UserService {
     if (newSkip >= 0 && newSkip < this.usersResponse().users.length) {
       this.skipSignal.set(newSkip);
     }
-  }
-
-  get totalPages() {
-    return Math.ceil(this.usersResponse().users.length / this.limit);
-  }
-
-  get currentPageIndex() {
-    return Math.floor(this.skipSignal() / this.limit);
   }
 }

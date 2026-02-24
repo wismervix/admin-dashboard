@@ -38,10 +38,18 @@
           </td>
           <td>
             <div class="d-flex gap-2 align-items-center justify-content-center">
-              <a routerLink="/users/{{ user.id }}/edit" routerLinkActive="active-link">
+              <a
+                routerLink="/users/{{ user.id }}/edit"
+                routerLinkActive="active-link"
+              >
                 <i class="fa-regular fa-pen-to-square"></i>
               </a>
-              <a href=""><i class="fa-regular fa-trash-can"></i></a>
+              <button
+                class="btn btn-link text-danger p-0"
+                (click)="deleteUser(user.id)"
+              >
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
             </div>
           </td>
         </tr>

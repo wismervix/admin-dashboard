@@ -1,0 +1,12 @@
+<div class="edit-page-container">
+  @if (user(); as u) {
+    <app-user-form
+      [user]="u"
+      (save)="handleSave($event)"
+    />
+  } @else {
+    <div class="loading">
+      <p>Loading user...</p>
+    </div>
+  }
+</div>
