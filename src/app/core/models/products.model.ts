@@ -25,6 +25,8 @@ export interface Product {
   meta: Meta;
   images: string[];
   thumbnail: string;
+  created_at: string; // ISO date string
+  updated_at: string; // ISO date string
 }
 
 export interface Dimensions {

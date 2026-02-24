@@ -1,11 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService } from '../../services/product';
+import { Product } from '../../../../core/models/products.model';
+import { ProductForm } from '../../components/product-form/product-form';
 
 @Component({
-  selector: 'app-product-form-page',
-  imports: [],
-  templateUrl: './product-form-page.html',
-  styleUrl: './product-form-page.scss',
+  selector: 'app-product-edit-page',
+  imports: [ProductForm],
+  templateUrl: './product-edit-page.html',
+  styleUrl: './product-edit-page.scss',
 })
-export class ProductFormPage {
+export class ProductEditPage {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private productService = inject(ProductService);
 
+  product = signal<Product | null>(null);
+
+  constructor() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const foundProduct = this.productService.getProductById(id);
+
+    if (foundProduct) {
+      this.product.set(foundProduct);
+    } else {
+      this.router.navigate(['/products']);
+    }
+  }
+
+  handleUpdate(updatedProduct: Product) {
+    this.productService.updateProduct(updatedProduct).subscribe({
+      next: () => this.router.navigate(['/products']),
+      error: (err) => console.error(err),
+    });
+  }
 }

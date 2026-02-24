@@ -33,6 +33,22 @@
               class="img-thumbnail"
             />
           </td>
+          <td>
+            <div class="d-flex gap-2 align-items-center justify-content-center">
+              <a
+                routerLink="/products/{{ product.id }}/edit"
+                routerLinkActive="active-link"
+              >
+                <i class="fa-regular fa-pen-to-square"></i>
+              </a>
+              <button
+                class="btn btn-link text-danger p-0"
+                (click)="deleteProduct(product.id)"
+              >
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
         </tr>
       } @empty {
         <p>No products available!</p>

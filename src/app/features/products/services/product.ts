@@ -1,5 +1,8 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { ProductsApiResponse } from '../../../core/models/products.model';
+import {
+  Product,
+  ProductsApiResponse,
+} from '../../../core/models/products.model';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, tap } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
@@ -17,36 +20,77 @@ export class ProductService {
   private skipSignal = signal(0);
   private limit = 30;
 
-  // Internal subject for reactive HTTP
-  private productsSubject = new BehaviorSubject<ProductsApiResponse>({
-    products: [],
-  });
-
-  productsResponse = signal(this.productsSubject.value);
+  productsResponse = signal<ProductsApiResponse>({ products: [] });
 
   // products = computed(() => this.productsResponse().products);
 
   // Computed list of products for the current page
-  products = computed(() => {
+  readonly products = computed(() => {
     const allProducts = this.productsResponse().products;
     const skip = this.skipSignal();
     return allProducts.slice(skip, skip + this.limit);
   });
 
+  readonly totalPages = computed(() =>
+    Math.ceil(this.productsResponse().products.length / this.limit),
+  );
+
+  readonly currentPageIndex = computed(() =>
+    Math.floor(this.skipSignal() / this.limit),
+  );
+
   constructor() {
-    effect(() => {
-      // Only need to fetch once, or you can fetch fresh if your API supports pagination
-      this.http
-        .get<ProductsApiResponse>(this.productsUrl)
-        .pipe(
-          tap((res) => {
-            this.productsSubject.next(res);
-            this.productsResponse.set(res);
-            // console.log('products res: ', this.productsResponse());
-          }),
-        )
-        .subscribe();
-    });
+    this.http
+      .get<ProductsApiResponse>(this.productsUrl)
+      .pipe(tap((res) => this.productsResponse.set(res)))
+      .subscribe();
+  }
+
+  getProductById(id: number): Product | undefined {
+    return this.productsResponse().products.find((p) => p.id === id);
+  }
+
+  updateProduct(updatedProduct: Product) {
+    return this.http
+      .put<{
+        product: Product;
+      }>(`${this.productsUrl}/${updatedProduct.id}`, updatedProduct)
+      .pipe(
+        tap((res) => {
+          const updatedProducts = this.productsResponse().products.map((u) =>
+            u.id === updatedProduct.id ? res.product : u,
+          );
+
+          this.productsResponse.set({ products: updatedProducts });
+        }),
+      );
+  }
+
+  createProduct(newProduct: Product) {
+    return this.http
+      .post<{ product: Product }>(this.productsUrl, newProduct)
+      .pipe(
+        tap((res) => {
+          // Add the new product to the local signal state
+          const updatedProducts = [
+            ...this.productsResponse().products,
+            res.product,
+          ];
+          this.productsResponse.set({ products: updatedProducts });
+        }),
+      );
+  }
+
+  deleteProduct(id: number) {
+    return this.http.delete(`${this.productsUrl}/${id}`).pipe(
+      tap(() => {
+        const filteredProducts = this.productsResponse().products.filter(
+          (p) => p.id !== id,
+        );
+
+        this.productsResponse.set({ products: filteredProducts });
+      }),
+    );
   }
 
   nextPage() {
@@ -68,13 +112,5 @@ export class ProductService {
     if (newSkip >= 0 && newSkip < this.productsResponse().products.length) {
       this.skipSignal.set(newSkip);
     }
-  }
-
-  get totalPages() {
-    return Math.ceil(this.productsResponse().products.length / this.limit);
-  }
-
-  get currentPageIndex() {
-    return Math.floor(this.skipSignal() / this.limit);
   }
 }

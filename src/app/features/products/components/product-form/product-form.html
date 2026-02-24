@@ -1,1 +1,87 @@
-<p>product-form works!</p>
+<div class="product-form-container">
+  @if (productSignal(); as p) {
+    <div class="product-header">
+      <img
+        [src]="form.value.thumbnail || p.thumbnail"
+        alt="Product thumbnail"
+      />
+      <div>
+        <h2>{{ form.value.title || p.title }}</h2>
+        <span class="category-badge">{{
+          form.value.category || p.category
+        }}</span>
+      </div>
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="product-form">
+    <div class="grid">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" formControlName="title" />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" formControlName="category" />
+      </div>
+
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" formControlName="price" step="0.01" />
+      </div>
+
+      <div class="form-group">
+        <label>Discount %</label>
+        <input
+          type="number"
+          formControlName="discount_percentage"
+          step="0.01"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Stock</label>
+        <input type="number" formControlName="stock" />
+      </div>
+
+      <div class="form-group">
+        <label>Brand</label>
+        <input type="text" formControlName="brand" />
+      </div>
+
+      <div class="form-group">
+        <label>SKU</label>
+        <input type="text" formControlName="sku" />
+      </div>
+
+      <div class="form-group">
+        <label>Thumbnail URL</label>
+        <input type="text" formControlName="thumbnail" />
+      </div>
+    </div>
+
+    @if (isEdit()) {
+      @if (productSignal(); as p) {
+        <div class="readonly-section">
+          <div><strong>ID:</strong> {{ p.id }}</div>
+          <div>
+            <strong>Created:</strong> {{ p.created_at | date: "medium" }}
+          </div>
+          <div>
+            <strong>Updated:</strong> {{ p.updated_at | date: "medium" }}
+          </div>
+        </div>
+      }
+    }
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">Save Product</button>
+    </div>
+  </form>
+</div>

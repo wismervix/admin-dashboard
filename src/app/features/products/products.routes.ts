@@ -9,17 +9,17 @@ export const PRODUCT_ROUTES: Routes = [
       ),
   },
   {
-    path: 'new',
-    loadComponent: () =>
-      import('./pages/product-edit-page/product-edit-page').then(
-        (m) => m.ProductFormPage,
-      ),
-  },
-  {
     path: ':id/edit',
     loadComponent: () =>
       import('./pages/product-edit-page/product-edit-page').then(
-        (m) => m.ProductFormPage,
+        (m) => m.ProductEditPage,
+      ),
+  },
+  {
+    path: 'new',
+    loadComponent: () =>
+      import('./pages/product-create-page/product-create-page').then(
+        (m) => m.ProductCreatePage,
       ),
   },
 ];
