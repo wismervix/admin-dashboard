@@ -15,28 +15,32 @@
   }
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="product-form">
-    <div class="grid">
-      <div class="form-group">
+    <div class="row">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Title</label>
         <input type="text" formControlName="title" />
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Description</label>
         <textarea formControlName="description"></textarea>
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Category</label>
-        <input type="text" formControlName="category" />
+        <select formControlName="category">
+          <option value="electronics">Electronics</option>
+          <option value="fashion">Fashion</option>
+          <option value="beauty">Beauty</option>
+        </select>
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Price</label>
         <input type="number" formControlName="price" step="0.01" />
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Discount %</label>
         <input
           type="number"
@@ -45,24 +49,225 @@
         />
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Stock</label>
         <input type="number" formControlName="stock" />
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Minimum Order Quantity</label>
+        <input type="number" formControlName="minimum_order_quantity" />
+      </div>
+
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Weight</label>
+        <input type="number" formControlName="weight" />
+      </div>
+
+      <div class="col-md-4 col-sm-6 form-group">
         <label>Brand</label>
         <input type="text" formControlName="brand" />
       </div>
 
-      <div class="form-group">
+      <div class="col-md-4 col-sm-6 form-group">
         <label>SKU</label>
         <input type="text" formControlName="sku" />
       </div>
 
-      <div class="form-group">
-        <label>Thumbnail URL</label>
-        <input type="text" formControlName="thumbnail" />
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Warranty Information</label>
+        <textarea formControlName="warranty_information"></textarea>
+      </div>
+
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Shipping Information</label>
+        <textarea formControlName="shipping_information"></textarea>
+      </div>
+
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Availability Status</label>
+        <select formControlName="availability_status">
+          <option value="In Stock">In Stock</option>
+          <option value="Preorder">Preorder</option>
+          <option value="Out of Stock">Out of Stock</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Return Policy</label>
+        <textarea formControlName="return_policy"></textarea>
+      </div>
+
+      <!-- Dimensions Section - Compact Layout -->
+      <div class="grouped-section" formGroupName="dimensions">
+        <h3>Dimensions</h3>
+        <div class="row">
+          <div class="col-md-4 col-sm-6 form-group">
+            <label>Width</label>
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                type="number"
+                formControlName="width"
+                step="0.01"
+                min="0"
+              />
+              <span class="unit">cm</span>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 form-group">
+            <label>Height</label>
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                type="number"
+                formControlName="height"
+                step="0.01"
+                min="0"
+              />
+              <span class="unit">cm</span>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-6 form-group">
+            <label>Depth</label>
+            <div class="d-flex gap-2 align-items-center">
+              <input
+                type="number"
+                formControlName="depth"
+                step="0.01"
+                min="0"
+              />
+              <span class="unit">cm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meta Section - Compact Layout -->
+      <div class="grouped-section" formGroupName="meta">
+        <h3>Meta</h3>
+        <div class="row">
+          <div class="col-md-4 col-sm-6 form-group">
+            <label>Barcode</label>
+            <input type="text" formControlName="barcode" />
+          </div>
+
+          <div class="col-md-4 col-sm-6 form-group">
+            <label>QR Code</label>
+            <input type="text" formControlName="qrCode" />
+          </div>
+
+          @if (isEdit()) {
+            @if (productSignal(); as p) {
+              <div class="col-md-4 col-sm-6 form-group">
+                <label>Created At</label>
+                <input
+                  type="datetime-local"
+                  formControlName="createdAt"
+                  readonly
+                />
+              </div>
+
+              <div class="col-md-4 col-sm-6 form-group">
+                <label>Last Updated At</label>
+                <input
+                  type="datetime-local"
+                  formControlName="updatedAt"
+                  readonly
+                />
+              </div>
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Reviews Section -->
+      <div class="grouped-section">
+        <h3>Reviews</h3>
+
+        <div formArrayName="reviews">
+          @for (review of reviewsArray.controls; let i = $index; track i) {
+            <div class="group-card" [formGroupName]="i">
+              <div class="row">
+                <div class="col-md-2 form-group">
+                  <label>Rating</label>
+                  <input
+                    type="number"
+                    formControlName="rating"
+                    min="0"
+                    max="5"
+                  />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label>Name</label>
+                  <input type="text" formControlName="reviewerName" />
+                </div>
+
+                <div class="col-md-4 form-group">
+                  <label>Email</label>
+                  <input type="email" formControlName="reviewerEmail" />
+                </div>
+
+                <div class="col-md-2 form-group d-flex align-items-end">
+                  <button
+                    class="btn btn-danger"
+                    type="button"
+                    (click)="removeReview(i)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Comment</label>
+                <textarea formControlName="comment"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Date</label>
+                <input type="datetime-local" formControlName="date" />
+              </div>
+
+              <hr />
+            </div>
+          }
+        </div>
+
+        <button class="btn btn-primary" type="button" (click)="addReview()">
+          + Add Review
+        </button>
+      </div>
+
+      <!-- Tags Section -->
+      <div class="grouped-section">
+        <h3>Tags</h3>
+
+        <div formArrayName="tags" class="row">
+          @for (tag of tagsArray.controls; let i = $index; track i) {
+            <div class="col-3 d-flex gap-2 align-items-center mb-3">
+              <input
+                type="text"
+                class="form-control"
+                [formControlName]="i"
+                placeholder="Enter tag"
+              />
+
+              <button
+                class="btn btn-danger"
+                type="button"
+                (click)="removeTag(i)"
+              >
+                X
+              </button>
+            </div>
+          }
+        </div>
+
+        <button class="btn btn-primary" type="button" (click)="addTag()">
+          + Add Tag
+        </button>
       </div>
     </div>
 

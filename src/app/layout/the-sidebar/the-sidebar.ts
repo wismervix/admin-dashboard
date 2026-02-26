@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './the-sidebar.scss',
 })
 export class TheSidebar {
-  isCollapsed = false;
+  isCollapsed = true;
   openSection: 'products' | 'users' | null = 'products';
 
   toggleSection(section: 'products' | 'users') {

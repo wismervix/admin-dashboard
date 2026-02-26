@@ -4,7 +4,7 @@ import {
   ProductsApiResponse,
 } from '../../../core/models/products.model';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 
 @Injectable({
