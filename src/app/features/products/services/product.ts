@@ -50,6 +50,41 @@ export class ProductService {
     return this.productsResponse().products.find((p) => p.id === id);
   }
 
+  uploadImages(
+    productId: number,
+    thumbnail?: File,
+    images?: File[],
+    removedImages?: string[],
+  ) {
+    const formData = new FormData();
+
+    if (thumbnail) {
+      formData.append('thumbnail', thumbnail);
+    }
+
+    images?.forEach((img) => {
+      formData.append('images[]', img);
+    });
+
+    removedImages?.forEach((img) => formData.append('removedImages[]', img));
+
+    return this.http
+      .post<{
+        product: Product;
+      }>(`${this.productsUrl}/${productId}/images`, formData)
+      .pipe(
+        tap((res) => {
+          const updated = this.productsResponse().products.map((p) =>
+            p.id === productId ? res.product : p,
+          );
+
+          this.productsResponse.set({
+            products: updated,
+          });
+        }),
+      );
+  }
+
   updateProduct(updatedProduct: Product) {
     return this.http
       .put<{

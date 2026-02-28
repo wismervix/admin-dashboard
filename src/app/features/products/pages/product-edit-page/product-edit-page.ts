@@ -28,10 +28,33 @@ export class ProductEditPage {
     }
   }
 
-  handleUpdate(updatedProduct: Product) {
-    this.productService.updateProduct(updatedProduct).subscribe({
-      next: () => this.router.navigate(['/products']),
-      error: (err) => console.error(err),
+  // handleUpdate(updatedProduct: Product) {
+  handleUpdate(data: any) {
+    this.productService.updateProduct(data.product).subscribe({
+      next: (res) => {
+        const productId = res.product.id;
+
+        if (
+          data.thumbnail ||
+          data.images?.length ||
+          data.removedImages?.length
+        ) {
+          this.productService
+            .uploadImages(
+              productId,
+              data.thumbnail,
+              data.images,
+              data.removedImages,
+            )
+            .subscribe(() => this.router.navigate(['/products']));
+        } else {
+          this.router.navigate(['/products']);
+        }
+      },
     });
+    // this.productService.updateProduct(updatedProduct).subscribe({
+    //   next: () => this.router.navigate(['/products']),
+    //   error: (err) => console.error(err),
+    // });
   }
 }

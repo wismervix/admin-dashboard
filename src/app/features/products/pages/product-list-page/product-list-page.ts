@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { ProductService } from '../../services/product';
 import { RouterModule } from '@angular/router';
+import { ApiService } from '../../../../core/services/api.service';
 
 @Component({
   selector: 'app-product-list-page',
@@ -10,6 +11,7 @@ import { RouterModule } from '@angular/router';
 })
 export class ProductListPage {
   public productService = inject(ProductService);
+  public apiService = inject(ApiService);
 
   products = this.productService.products;
   currentPage = this.productService.currentPageIndex;

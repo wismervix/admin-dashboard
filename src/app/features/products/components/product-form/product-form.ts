@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../../../core/models/products.model';
+import { DisplayImage, Product } from '../../../../core/models/products.model';
 import {
   FormGroup,
   FormArray,
@@ -16,6 +16,7 @@ import {
   FormBuilder,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ApiService } from '../../../../core/services/api.service';
 
 @Component({
   selector: 'app-product-form',
@@ -25,11 +26,53 @@ import {
 })
 export class ProductForm {
   private fb = inject(FormBuilder);
+  public apiService = inject(ApiService);
 
   private _product = signal<Product | null>(null);
   readonly productSignal = this._product.asReadonly();
 
   readonly isEdit = signal(false);
+
+  thumbnailFile = signal<File | null>(null);
+  thumbnailPreview = signal<string | null>(null);
+
+  displayImages = signal<DisplayImage[]>([]);
+  removedImages = signal<string[]>([]);
+
+  onThumbnailSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    this.thumbnailFile.set(file);
+    this.thumbnailPreview.set(URL.createObjectURL(file));
+  }
+
+  onImagesSelected(event: any) {
+    const target = event.target as HTMLInputElement;
+
+    if (!target.files) return;
+
+    const newImages: DisplayImage[] = Array.from(target.files).map((file) => ({
+      type: 'new',
+      url: URL.createObjectURL(file),
+      file,
+    }));
+
+    this.displayImages.update((images) => [...images, ...newImages]);
+
+    target.value = '';
+  }
+
+  removeImage(index: number) {
+    const image = this.displayImages()[index];
+
+    if (image.type === 'existing' && image.path) {
+      this.removedImages.update((arr) => [...arr, image.path!]);
+    }
+
+    this.displayImages.update((arr) => arr.filter((_, i) => i !== index));
+  }
 
   private toDateTimeLocal(value?: string | Date | null): string {
     if (!value) return '';
@@ -106,6 +149,21 @@ export class ProductForm {
       value.tags?.forEach((tag) => {
         this.addTag(tag);
       });
+
+      // Load existing images (from backend)
+      if (value.images?.length) {
+        this.displayImages.set(
+          value.images.map((img) => ({
+            type: 'existing',
+            url: this.apiService.getMediaUrl(img),
+            path: img,
+          })),
+        );
+      }
+
+      if (value.thumbnail) {
+        this.thumbnailPreview.set(this.apiService.getMediaUrl(value.thumbnail)); // 'http://localhost:8000' + value.thumbnail );
+      }
     }
   }
 
@@ -114,7 +172,13 @@ export class ProductForm {
     return (Math.min(Math.max(rating, 0), 5) / 5) * 100; // 0-100%
   });
 
-  @Output() save = new EventEmitter<Product>();
+  // @Output() save = new EventEmitter<Product>();
+  @Output() save = new EventEmitter<{
+    product: Product;
+    thumbnail?: File | null;
+    images?: File[];
+    removedImages?: string[];
+  }>();
 
   form: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(255)]],
@@ -182,6 +246,16 @@ export class ProductForm {
           updated_at: new Date().toISOString(),
         };
 
-    this.save.emit(updatedProduct);
+    const newImages = this.displayImages()
+      .filter((img) => img.type === 'new')
+      .map((img) => img.file!);
+
+    // this.save.emit(updatedProduct);
+    this.save.emit({
+      product: updatedProduct,
+      thumbnail: this.thumbnailFile(),
+      images: newImages,
+      removedImages: this.removedImages(),
+    });
   }
 }

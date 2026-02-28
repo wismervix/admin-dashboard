@@ -1,8 +1,9 @@
 <div class="product-form-container">
   @if (productSignal(); as p) {
     <div class="product-header">
+      <!-- [src]="'http://localhost:8000' + (form.value.thumbnail || p.thumbnail)" -->
       <img
-        [src]="form.value.thumbnail || p.thumbnail"
+        [src]="apiService.getMediaUrl(form.value.thumbnail || p.thumbnail)"
         alt="Product thumbnail"
       />
       <div>
@@ -16,6 +17,22 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="product-form">
     <div class="row">
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>Thumbnail</label>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onThumbnailSelected($event)"
+        />
+
+        @if (thumbnailPreview()) {
+          <img
+            [src]="thumbnailPreview()"
+            style="width: 120px; margin-top: 10px"
+          />
+        }
+      </div>
+
       <div class="col-md-4 col-sm-6 form-group">
         <label>Title</label>
         <input type="text" formControlName="title" />
@@ -96,6 +113,28 @@
       <div class="col-md-4 col-sm-6 form-group">
         <label>Return Policy</label>
         <textarea formControlName="return_policy"></textarea>
+      </div>
+
+      <div class="grouped-section">
+        <h3>Product Images</h3>
+
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          (change)="onImagesSelected($event)"
+        />
+
+        <div class="d-flex gap-2 flex-wrap mt-2">
+          @for (img of displayImages(); track img.url) {
+            <div class="image-wrapper">
+              <img [src]="img.url" width="100" />
+              <button type="button" class="delete-btn" (click)="removeImage($index)">
+                ✕
+              </button>
+            </div>
+          }
+        </div>
       </div>
 
       <!-- Dimensions Section - Compact Layout -->

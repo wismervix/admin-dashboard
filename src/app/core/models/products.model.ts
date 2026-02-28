@@ -49,3 +49,10 @@ export interface Meta {
   barcode: string;
   qrCode: string;
 }
+
+export interface DisplayImage {
+  type: 'existing' | 'new';
+  url: string;
+  path?: string;
+  file?: File;
+}
