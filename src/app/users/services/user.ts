@@ -1,4 +1,4 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { User, UsersApiResponse } from '../../core/models/user.model';
 import { ApiService } from '../../core/services/api.service';
 import { HttpClient } from '@angular/common/http';
@@ -75,6 +75,7 @@ export class UserService {
       }),
     );
   }
+
   nextPage() {
     const nextSkip = this.skipSignal() + this.limit;
     if (nextSkip < this.usersResponse().users.length) {

@@ -28,7 +28,6 @@ export class ProductEditPage {
     }
   }
 
-  // handleUpdate(updatedProduct: Product) {
   handleUpdate(data: any) {
     this.productService.updateProduct(data.product).subscribe({
       next: (res) => {
@@ -52,6 +51,7 @@ export class ProductEditPage {
         }
       },
     });
+    // handleUpdate(updatedProduct: Product) {
     // this.productService.updateProduct(updatedProduct).subscribe({
     //   next: () => this.router.navigate(['/products']),
     //   error: (err) => console.error(err),
