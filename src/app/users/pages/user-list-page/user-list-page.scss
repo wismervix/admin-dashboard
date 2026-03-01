@@ -1,0 +1,25 @@
+.table-wrapper {
+  max-width: 90%;
+  overflow: hidden;
+  // max-width: clamp(400px, 80.5vw, 950px);
+
+  @media screen and (max-width: 576px) {
+    tr,
+    td {
+      font-size: 10px;
+    }
+
+    td {
+      white-space: normal !important;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .img-thumbnail {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}

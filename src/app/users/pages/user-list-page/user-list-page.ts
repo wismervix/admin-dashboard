@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { UserService } from '../../services/user';
 import { RouterModule } from '@angular/router';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-user-list-page',
@@ -10,6 +11,7 @@ import { RouterModule } from '@angular/router';
 })
 export class UserListPage {
   public userService = inject(UserService);
+  public apiService = inject(ApiService);
 
   users = this.userService.users;
   currentPage = this.userService.currentPageIndex;

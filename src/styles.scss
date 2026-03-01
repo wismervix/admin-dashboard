@@ -18,8 +18,9 @@
 
 /* ===== APPLE UI GLOBAL STYLES ===== */
 body {
-  min-height: 100vh;
+  overflow: hidden;
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 a {

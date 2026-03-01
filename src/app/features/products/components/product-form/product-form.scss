@@ -125,29 +125,28 @@
   }
 }
 
+.rating {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(15.5px, 1.3vw, 18px); // adjust size as needed
 
-    .rating {
-      position: relative;
-      display: inline-block;
-      font-size: clamp(15.5px, 1.3vw, 18px); // adjust size as needed
+  .stars-outer {
+    color: #ccc; // gray stars (background)
+    position: relative;
+    display: inline-block;
+  }
 
-      .stars-outer {
-        color: #ccc; // gray stars (background)
-        position: relative;
-        display: inline-block;
-      }
+  .stars-inner {
+    color: #f6b76f; // gold fill
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0%; // dynamically set via starWidth()
+  }
 
-      .stars-inner {
-        color: #f6b76f; // gold fill
-        position: absolute;
-        top: 0;
-        left: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        width: 0%; // dynamically set via starWidth()
-      }
-
-      i {
-        margin-right: 2px; // optional spacing between stars
-      }
-    }
+  i {
+    margin-right: 2px; // optional spacing between stars
+  }
+}

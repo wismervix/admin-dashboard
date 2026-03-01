@@ -1,7 +1,7 @@
 <div class="user-form-container">
   @if (userSignal(); as u) {
     <div class="user-header">
-      <img [src]="form.value.image || u.image" alt="User avatar" />
+      <img [src]="apiService.getMediaUrl(form.value.image || u.image)" alt="User avatar" />
       <div>
         <h2>{{ form.value.first_name }} {{ form.value.last_name }}</h2>
         <span class="role-badge" [class.admin]="form.value.role === 'admin'">
@@ -11,33 +11,54 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="user-form">
-      <div class="grid">
-        <div class="form-group">
+      <div class="row">
+      <div class="col-md-4 col-sm-6 form-group">
+        <label>User Profile Image</label>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
+
+        @if (imagePreview()) {
+          <img
+            [src]="imagePreview()"
+            style="width: 120px; margin-top: 10px"
+          />
+        }
+      </div>
+
+        <div class="col-md-4 col-sm-6 form-group">
           <label>First Name</label>
           <input type="text" formControlName="first_name" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Last Name</label>
           <input type="text" formControlName="last_name" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Email</label>
           <input type="email" formControlName="email" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Username</label>
           <input type="text" formControlName="username" />
         </div>
 
-        <div class="form-group">
-          <label>Age</label>
-          <input type="number" formControlName="age" />
+        <div class="col-md-4 col-sm-6 form-group">
+          <label>Password</label>
+          <input type="password" formControlName="password" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
+          <label>Birth Date</label>
+          <input type="date" formControlName="birthDate" />
+        </div>
+
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Gender</label>
           <select formControlName="gender">
             <option value="male">Male</option>
@@ -46,43 +67,39 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Role</label>
           <select formControlName="role">
             <option value="user">User</option>
             <option value="admin">Admin</option>
+            <option value="moderator">Moderator</option>
           </select>
         </div>
 
-        <div class="form-group full">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Address</label>
           <input type="text" formControlName="address" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>City</label>
           <input type="text" formControlName="city" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>State</label>
           <input type="text" formControlName="state" />
         </div>
 
-        <div class="form-group">
+        <div class="col-md-4 col-sm-6 form-group">
           <label>Country</label>
           <input type="text" formControlName="country" />
-        </div>
-
-        <div class="form-group full">
-          <label>Image URL</label>
-          <input type="text" formControlName="image" />
         </div>
       </div>
 
       <div class="readonly-section">
         <div><strong>ID:</strong> {{ u.id }}</div>
-        <div><strong>Birth Date:</strong> {{ u.birthDate }}</div>
+        <div><strong>Age:</strong> {{ calculatedAge() ?? u.age }}</div>
         <div><strong>Created:</strong> {{ u.created_at | date: "medium" }}</div>
         <div><strong>Updated:</strong> {{ u.updated_at | date: "medium" }}</div>
       </div>

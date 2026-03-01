@@ -50,6 +50,9 @@ export class ProductEditPage {
           this.router.navigate(['/products']);
         }
       },
+      error: (err) => {
+        console.error('Update failed', err);
+      },
     });
     // handleUpdate(updatedProduct: Product) {
     // this.productService.updateProduct(updatedProduct).subscribe({

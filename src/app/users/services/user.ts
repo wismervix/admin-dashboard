@@ -48,6 +48,49 @@ export class UserService {
     return this.usersResponse().users.find((u) => u.id === id);
   }
 
+  calculateAge(birthDate: string): number {
+    if (!birthDate) return 0;
+
+    const today = new Date();
+    const birth = new Date(birthDate);
+
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  }
+
+  uploadImage(userId: number, image?: File) {
+    const formData = new FormData();
+
+    if (image) {
+      formData.append('image', image);
+    }
+
+    return this.http
+      .post<{
+        user: User;
+      }>(`${this.usersUrl}/${userId}/images`, formData)
+      .pipe(
+        tap((res) => {
+          const updated = this.usersResponse().users.map((u) =>
+            u.id === userId ? res.user : u,
+          );
+
+          this.usersResponse.set({
+            users: updated,
+          });
+        }),
+      );
+  }
+
   // ✏ Update user
   updateUser(updatedUser: User) {
     return this.http
@@ -57,6 +100,7 @@ export class UserService {
           const updatedUsers = this.usersResponse().users.map((u) =>
             u.id === updatedUser.id ? res.user : u,
           );
+          // console.log('updated user: ', updatedUser);
 
           this.usersResponse.set({ users: updatedUsers });
         }),

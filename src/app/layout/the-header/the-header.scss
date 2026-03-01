@@ -1,11 +1,11 @@
+@use "../../../mixins.scss" as mixin;
+
 .header {
-  height: 70px;
+  min-height: 70px;
   background-color: #ffffff;
+  padding: 15px 65px 15px 24px;
   border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
+  @include mixin.spread(25px, center, row, wrap);
 
   &__left {
     h1 {
@@ -16,9 +16,10 @@
   }
 
   &__right {
-    display: flex;
-    align-items: center;
     gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
     input {
       padding: 8px 12px;
@@ -55,5 +56,10 @@
       font-size: 14px;
       font-weight: 500;
     }
+  }
+
+  @media(max-width: 640px){
+    align-items: start;
+    flex-direction: column;
   }
 }
