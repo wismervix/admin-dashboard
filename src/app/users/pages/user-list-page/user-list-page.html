@@ -72,9 +72,9 @@
 
   <!-- Pagination -->
   <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center my-5">
       <li class="page-item" [class.disabled]="currentPage() === 0">
-        <button class="page-link" (click)="prevPage()">Previous</button>
+        <button class="page-link" (click)="prevPage()"><i class="fa-solid fa-angles-left"></i></button>
       </li>
 
       <!-- Page numbers -->
@@ -90,7 +90,7 @@
         class="page-item"
         [class.disabled]="currentPage() === totalPages() - 1"
       >
-        <button class="page-link" (click)="nextPage()">Next</button>
+        <button class="page-link" (click)="nextPage()"><i class="fa-solid fa-angles-right"></i></button>
       </li>
     </ul>
   </nav>

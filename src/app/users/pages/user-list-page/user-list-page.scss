@@ -7,6 +7,10 @@
     tr,
     td {
       font-size: 10px;
+
+        a{
+            font-size: 15px;
+        }
     }
 
     td {
@@ -16,10 +20,23 @@
     }
   }
 
+  @media (max-width: 400px) {
+    max-width: clamp(60%, 0.2vw + 72%, 80%);
+    td{
+        font-size: 8px;
+    }
+  }
+
   .img-thumbnail {
     width: 30px;
     height: 30px;
     object-fit: cover;
     border-radius: 50%;
   }
+}
+
+.page-link{
+    height: 25px;
+    font-size: 14px;
+    padding: 1px 10px;
 }

@@ -4,6 +4,10 @@
   margin-left: 80px;
   background-color: #f4f6f9;
   font-family: "Inter", sans-serif;
+    
+    @media(max-width: 576px){
+      margin-left: 45px;
+    }
 
   &__main {
     display: flex;
