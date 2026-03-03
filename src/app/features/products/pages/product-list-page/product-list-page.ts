@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { ProductService } from '../../services/product';
+import { ProductsStore } from '../../services/products.store';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../../core/services/api.service';
 
@@ -10,23 +10,23 @@ import { ApiService } from '../../../../core/services/api.service';
   styleUrl: './product-list-page.scss',
 })
 export class ProductListPage {
-  public productService = inject(ProductService);
+  public productsStore = inject(ProductsStore);
   public apiService = inject(ApiService);
 
-  products = this.productService.products;
-  currentPage = this.productService.currentPageIndex;
-  totalPages = this.productService.totalPages;
+  products = this.productsStore.products;
+  currentPage = this.productsStore.currentPageIndex;
+  totalPages = this.productsStore.totalPages;
 
   nextPage() {
-    this.productService.nextPage();
+    this.productsStore.nextPage();
   }
 
   prevPage() {
-    this.productService.prevPage();
+    this.productsStore.prevPage();
   }
 
   goToPage(page: number) {
-    this.productService.goToPage(page);
+    this.productsStore.goToPage(page);
   }
 
   pageNumbers = computed(() =>
@@ -38,7 +38,7 @@ export class ProductListPage {
 
     if (!confirmed) return;
 
-    this.productService.deleteProduct(id).subscribe({
+    this.productsStore.deleteProduct(id).subscribe({
       error: (err) => {
         console.error('Delete failed', err);
       },

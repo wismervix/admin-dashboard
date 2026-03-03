@@ -14,9 +14,9 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { User } from '../../../core/models/user.model';
-import { ApiService } from '../../../core/services/api.service';
-import { UserService } from '../../services/user';
+import { User } from '../../../../core/models/user.model';
+import { ApiService } from '../../../../core/services/api.service';
+import { UsersStore } from '../../services/users.store';
 
 @Component({
   selector: 'app-user-form',
@@ -33,15 +33,15 @@ export class UserForm {
 
   private fb = inject(FormBuilder);
   public apiService = inject(ApiService);
-  private userService = inject(UserService);
+  private userStore = inject(UsersStore);
 
   private _user = signal<User | null>(null);
   readonly userSignal = this._user.asReadonly();
 
   birthDateSignal = signal<string | null>(null);
   readonly calculatedAge = computed(() => {
-  const birthDate = this.birthDateSignal();
-    return birthDate ? this.userService.calculateAge(birthDate) : null;
+    const birthDate = this.birthDateSignal();
+    return birthDate ? this.userStore.calculateAge(birthDate) : null;
   });
 
   imageFile = signal<File | null>(null);
@@ -60,7 +60,7 @@ export class UserForm {
     this._user.set(value);
     if (value) {
       this.form.patchValue(value);
-    this.birthDateSignal.set(value.birthDate);
+      this.birthDateSignal.set(value.birthDate);
 
       if (value.image) {
         this.imagePreview.set(this.apiService.getMediaUrl(value.image));
@@ -90,7 +90,7 @@ export class UserForm {
   submit() {
     if (this.form.invalid || !this._user()) return;
 
-    const age = this.userService.calculateAge(this.form.value.birthDate);
+    const age = this.userStore.calculateAge(this.form.value.birthDate);
 
     const updatedUser: User = {
       ...this._user()!,

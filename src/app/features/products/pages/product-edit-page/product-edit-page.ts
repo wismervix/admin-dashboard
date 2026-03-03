@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService } from '../../services/product';
+import { ProductsStore } from '../../services/products.store';
 import { Product } from '../../../../core/models/products.model';
 import { ProductForm } from '../../components/product-form/product-form';
 
@@ -13,13 +13,13 @@ import { ProductForm } from '../../components/product-form/product-form';
 export class ProductEditPage {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private productService = inject(ProductService);
+  private productsStore = inject(ProductsStore);
 
   product = signal<Product | null>(null);
 
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const foundProduct = this.productService.getProductById(id);
+    const foundProduct = this.productsStore.getProductById(id);
 
     if (foundProduct) {
       this.product.set(foundProduct);
@@ -29,7 +29,7 @@ export class ProductEditPage {
   }
 
   handleUpdate(data: any) {
-    this.productService.updateProduct(data.product).subscribe({
+    this.productsStore.updateProduct(data.product).subscribe({
       next: (res) => {
         const productId = res.product.id;
 
@@ -38,7 +38,7 @@ export class ProductEditPage {
           data.images?.length ||
           data.removedImages?.length
         ) {
-          this.productService
+          this.productsStore
             .uploadImages(
               productId,
               data.thumbnail,
@@ -55,7 +55,7 @@ export class ProductEditPage {
       },
     });
     // handleUpdate(updatedProduct: Product) {
-    // this.productService.updateProduct(updatedProduct).subscribe({
+    // this.productsStore.updateProduct(updatedProduct).subscribe({
     //   next: () => this.router.navigate(['/products']),
     //   error: (err) => console.error(err),
     // });

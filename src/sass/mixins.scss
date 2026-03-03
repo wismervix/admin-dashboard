@@ -1,7 +1,7 @@
 // ========================
 // 🔁🧩 MIXINS (reusable style blocks)
 // ========================
-@use "./variables" as *;
+@use "./sass/variables" as *;
 
 @mixin dynamic-text(
   $weight: 600,

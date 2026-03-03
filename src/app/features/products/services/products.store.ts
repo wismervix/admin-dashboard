@@ -10,7 +10,7 @@ import { ApiService } from '../../../core/services/api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductService {
+export class ProductsStore {
   private http = inject(HttpClient);
   private apiService = inject(ApiService);
 

@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
-import { UserService } from '../../services/user';
+import { UsersStore } from '../../services/users.store';
 import { RouterModule } from '@angular/router';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../../../core/services/api.service';
 
 @Component({
   selector: 'app-user-list-page',
@@ -10,23 +10,23 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './user-list-page.scss',
 })
 export class UserListPage {
-  public userService = inject(UserService);
+  public usersStore = inject(UsersStore);
   public apiService = inject(ApiService);
 
-  users = this.userService.users;
-  currentPage = this.userService.currentPageIndex;
-  totalPages = this.userService.totalPages;
+  users = this.usersStore.users;
+  currentPage = this.usersStore.currentPageIndex;
+  totalPages = this.usersStore.totalPages;
 
   nextPage() {
-    this.userService.nextPage();
+    this.usersStore.nextPage();
   }
 
   prevPage() {
-    this.userService.prevPage();
+    this.usersStore.prevPage();
   }
 
   goToPage(page: number) {
-    this.userService.goToPage(page);
+    this.usersStore.goToPage(page);
   }
 
   pageNumbers = computed(() =>
@@ -38,7 +38,7 @@ export class UserListPage {
 
     if (!confirmed) return;
 
-    this.userService.deleteUser(id).subscribe({
+    this.usersStore.deleteUser(id).subscribe({
       error: (err) => {
         console.error('Delete failed', err);
       },

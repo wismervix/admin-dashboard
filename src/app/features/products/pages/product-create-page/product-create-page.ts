@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductService } from '../../services/product';
+import { ProductsStore } from '../../services/products.store';
 import { Product } from '../../../../core/models/products.model';
 import { ProductForm } from '../../components/product-form/product-form';
 
@@ -12,15 +12,15 @@ import { ProductForm } from '../../components/product-form/product-form';
 })
 export class ProductCreatePage {
   private router = inject(Router);
-  private productService = inject(ProductService);
+  private productsStore = inject(ProductsStore);
 
   // handleCreate(product: Product) {
-  // this.productService.createProduct(product).subscribe({
+  // this.productsStore.createProduct(product).subscribe({
   //   next: (res) => this.router.navigate(['/products']),
   //   error: (err) => console.error(err),
   // });
   handleCreate(data: any) {
-    this.productService.createProduct(data.product).subscribe({
+    this.productsStore.createProduct(data.product).subscribe({
       next: (res) => {
         const productId = res.product.id;
 
@@ -29,7 +29,7 @@ export class ProductCreatePage {
           data.images?.length ||
           data.removedImages?.length
         ) {
-          this.productService
+          this.productsStore
             .uploadImages(
               productId,
               data.thumbnail,

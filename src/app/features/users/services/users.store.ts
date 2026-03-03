@@ -1,13 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { User, UsersApiResponse } from '../../core/models/user.model';
-import { ApiService } from '../../core/services/api.service';
+import { User, UsersApiResponse } from '../../../core/models/user.model';
+import { ApiService } from '../../../core/services/api.service';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class UsersStore {
   private http = inject(HttpClient);
   private apiService = inject(ApiService);
 
