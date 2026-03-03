@@ -1,8 +1,8 @@
 // // ========================
 // // 🌌 GLOBAL BODY
 // // ========================
-@use "./sass/mixins" as mixin;
-@use "./sass/variables" as *;
+@use "../sass/mixins.scss" as mixin;
+@use "../sass/variables.scss" as *;
 
 // Third-party libraries
 @use "@fortawesome/fontawesome-free/css/all.min.css" as *;
