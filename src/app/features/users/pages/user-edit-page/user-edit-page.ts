@@ -1,10 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsersStore } from '../../services/users.store';
+import { UsersStore } from '../../data/users.store';
 import { User } from '../../../../core/models/user.model';
 import { UserForm } from '../../components/user-form/user-form';
-import { calculateAge } from '../../../../core/utils/date.utils';
 
 @Component({
   selector: 'app-user-edit-page',

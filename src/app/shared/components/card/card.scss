@@ -1,0 +1,4 @@
+@use "../../../../sass/mixins.scss" as mixin;
+:host ::ng-deep .card-header > [card-header] {
+  @include mixin.spread(15px, center, row, wrap);
+}

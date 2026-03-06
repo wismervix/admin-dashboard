@@ -16,11 +16,12 @@ import {
 } from '@angular/forms';
 import { User } from '../../../../core/models/user.model';
 import { ApiService } from '../../../../core/services/api.service';
-import { UsersStore } from '../../services/users.store';
+import { calculateAge } from '../../../../core/utils/date.utils';
+import { Card } from "../../../../shared/components/card/card";
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Card],
   templateUrl: './user-form.html',
   styleUrl: './user-form.scss',
 })
@@ -33,7 +34,6 @@ export class UserForm {
 
   private fb = inject(FormBuilder);
   public apiService = inject(ApiService);
-  private userStore = inject(UsersStore);
 
   private _user = signal<User | null>(null);
   readonly userSignal = this._user.asReadonly();
@@ -41,7 +41,7 @@ export class UserForm {
   birthDateSignal = signal<string | null>(null);
   readonly calculatedAge = computed(() => {
     const birthDate = this.birthDateSignal();
-    return birthDate ? this.userStore.calculateAge(birthDate) : null;
+    return birthDate ? calculateAge(birthDate) : null;
   });
 
   imageFile = signal<File | null>(null);
@@ -90,7 +90,7 @@ export class UserForm {
   submit() {
     if (this.form.invalid || !this._user()) return;
 
-    const age = this.userStore.calculateAge(this.form.value.birthDate);
+    const age = calculateAge(this.form.value.birthDate);
 
     const updatedUser: User = {
       ...this._user()!,

@@ -1,11 +1,14 @@
 import { Component, computed, inject } from '@angular/core';
-import { UsersStore } from '../../services/users.store';
+import { UsersStore } from '../../data/users.store';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../../core/services/api.service';
+import { DataTable } from '../../../../shared/components/data-table/data-table';
+import { NgClass } from '@angular/common';
+import { Card } from '../../../../shared/components/card/card';
 
 @Component({
   selector: 'app-user-list-page',
-  imports: [RouterModule],
+  imports: [RouterModule, DataTable, NgClass, Card],
   templateUrl: './user-list-page.html',
   styleUrl: './user-list-page.scss',
 })
@@ -17,22 +20,21 @@ export class UserListPage {
   currentPage = this.usersStore.currentPageIndex;
   totalPages = this.usersStore.totalPages;
 
-  nextPage() {
-    this.usersStore.nextPage();
-  }
+  // nextPage() {
+  //   this.usersStore.nextPage();
+  // }
 
-  prevPage() {
-    this.usersStore.prevPage();
-  }
+  // prevPage() {
+  //   this.usersStore.prevPage();
+  // }
+
+  // pageNumbers = computed(() =>
+  //   Array.from({ length: this.totalPages() }, (_, i) => i),
+  // );
 
   goToPage(page: number) {
     this.usersStore.goToPage(page);
   }
-
-  pageNumbers = computed(() =>
-    Array.from({ length: this.totalPages() }, (_, i) => i),
-  );
-
   deleteUser(id: number) {
     const confirmed = confirm('Are you sure you want to delete this user?');
 

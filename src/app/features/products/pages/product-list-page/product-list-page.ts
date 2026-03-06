@@ -1,11 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
-import { ProductsStore } from '../../services/products.store';
+import { ProductsStore } from '../../data/products.store';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../../core/services/api.service';
+import { Card } from '../../../../shared/components/card/card';
+import { DataTable } from '../../../../shared/components/data-table/data-table';
 
 @Component({
   selector: 'app-product-list-page',
-  imports: [RouterModule],
+  imports: [RouterModule, Card, DataTable],
   templateUrl: './product-list-page.html',
   styleUrl: './product-list-page.scss',
 })

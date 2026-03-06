@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsStore } from '../../services/products.store';
+import { ProductsStore } from '../../data/products.store';
 import { Product } from '../../../../core/models/products.model';
 import { ProductForm } from '../../components/product-form/product-form';
 
