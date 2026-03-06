@@ -7,6 +7,13 @@ export const routes: Routes = [
     component: DashboardLayout,
     children: [
       {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('./features/dashboard/dashboard.routes').then(
+            (r) => r.DASHBOARD_ROUTES,
+          ),
+      },
+      {
         path: 'products',
         loadChildren: () =>
           import('./features/products/products.routes').then(
@@ -22,7 +29,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'products',
+        redirectTo: 'dashboard',
         pathMatch: 'full',
       },
     ],

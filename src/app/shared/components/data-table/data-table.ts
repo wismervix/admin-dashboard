@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  // EventEmitter,
-  input,
-  output,
-} from '@angular/core';
-// import { TableColumn } from '../../../core/models/table.types';
+import { Component, computed, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-data-table',
